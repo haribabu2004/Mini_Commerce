@@ -4,17 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "dev": "cross-env NODE_ENV=development nodemon backend/server.js",
-  "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
-  "start": "cross-env NODE_ENV=production node backend/server.js"
-},
+    "dev": "cross-env NODE_ENV=development nodemon backend/server.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "cross-env NODE_ENV=production node backend/server.js"
+  },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.8.0"
   },
   "devDependencies": {
