@@ -5,6 +5,7 @@ import path from "path";
 import { connectDB } from "./config/db.js";
 import productRoutes from "./routes/product.route.js";
 import authRoutes from "./routes/auth.route.js";
+import chatRoutes from "./routes/chat.route.js";
 
 dotenv.config({ quiet: true });
 
@@ -18,6 +19,7 @@ app.use(express.json()); // middleware to access req.body (database)
 
 app.use("/api", productRoutes);
 app.use("/auth", authRoutes);
+app.use("/chat", chatRoutes);
 
 if (process.env.NODE_ENV === "production") {
   // Fixed path.join arguments
