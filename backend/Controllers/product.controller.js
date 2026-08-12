@@ -3,8 +3,38 @@ import mongoose from "mongoose";
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
-    res.status(200).json({ success: true, data: products });
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 6;
+    const search = req.query.search || "";
+
+    // dynamic search filter
+    const searchQuery = search
+      ? { name: { $regex: search, $options: "i" } }
+      : {};
+
+    const skip = (page - 1) * limit;
+
+    const totalProducts = await Product.countDocuments(searchQuery);
+
+    const products = await Product.find(searchQuery)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+    
+    const totalPages = Math.ceil(totalProducts/limit);
+
+    res.status(200).json({ 
+      success: true, 
+      data: products, 
+      pagination:{
+        currentPage: page,
+        limit,
+        totalProducts, 
+        totalPages, 
+        hasNextPage : page < totalPages,
+        hasPrevPage: page > 1,
+      }
+    });
   } catch (error) {
     console.error("Error in fetching product:", error.message);
     res.status(500).json({ success: false, message: "Server Error" });

@@ -1,19 +1,28 @@
 // import React from "react";
 
-import { Container, VStack, Text, SimpleGrid } from "@chakra-ui/react";
+import { Container, VStack, Text, SimpleGrid, Input, InputGroup } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useProductStore } from "../store/product.js";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 
 import ProductCard from "../components/ProductCard.jsx";
+import { Pagination } from "../components/Pagination.jsx";
+import { ChatBotDrawer } from "../components/ChatBotDrawer.jsx";
 
 
 const HomePage = () => {
-  const { fetchProducts, products } = useProductStore();
+  const { fetchProducts, products, pagination } = useProductStore();
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(()=>{
-    fetchProducts();
-  },[fetchProducts])
+    fetchProducts(page,search);
+  },[fetchProducts,page,search])
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    setPage(1);
+  }
 
   console.log("Result");
   console.log(products);  
@@ -34,6 +43,19 @@ const HomePage = () => {
         >
           Current Products 🚀
         </Text>
+
+        {/* 1. Search Bar */}
+        <InputGroup maxW="500px" w="full">
+          <Input
+            placeholder="Search products by name..."
+            value={search}
+            onChange={handleSearchChange}
+            bg="white"
+            _dark={{ bg: "gray.800" }}
+          />
+        </InputGroup>
+
+        {/* Prodcut grid */}
         <SimpleGrid
           columns={{
             base: 1,
@@ -66,7 +88,12 @@ const HomePage = () => {
             </Link>
           </Text>
         )}
+        {/* Server-side Pagination Controls */}
+        <Pagination pagination={pagination} onPageChange={(p) => setPage(p)}/>
       </VStack>
+
+      {/* Floating ChatBot */}
+      <ChatBotDrawer/>
     </Container>
   );
 };

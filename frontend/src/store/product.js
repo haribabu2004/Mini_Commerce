@@ -4,6 +4,7 @@ import { create } from "zustand";
 
 export const useProductStore = create((set) => ({
   products: [],
+  pagination: null,
   setProducts: (products) => set({ products }),
 
   createProduct: async (newProduct) => {
@@ -36,14 +37,16 @@ export const useProductStore = create((set) => ({
       return { success: false, message: "Server connection failed: " + error };
     }
   },
-  fetchProducts: async () => {
+  fetchProducts: async (page = 1,search ="") => {
     try {
-      const res = await fetch("/api/products");
+      const res = await fetch(`/api/products?page=${page}&limit=6&search=${search}`);
       const data = await res.json();
       console.log("Fetched API Data:", data);
 
       if (res.ok) {
-        set({ products: data.data });
+        set({ products: data.data,
+          pagination: data.pagination
+         });
       } else {
         console.error("Failed to fetch products:", data.message);
       }

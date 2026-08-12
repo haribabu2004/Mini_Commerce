@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler"
 import jwt from "jsonwebtoken"
 
-export const protect = asyncHandler(async (req,resizeBy,next)=>{
+export const protect = asyncHandler(async (req,res,next)=>{
     let token;
     let authheader = req.headers.authorization;
 
